@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabeça d'Água — Simulador de Alerta</title>
+    <style>
+         :root {
+            --bg: #071018;
+            --surface: #0f1724;
+            --surface-2: #122131;
+            --text: #ffffff;
+            --muted: #c5cdd8;
+            --info: #40b4ff;
+            --red: #ff5c5c;
+            --green: #2ecc71;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at top left, rgba(64, 180, 255, 0.18), transparent 35%), linear-gradient(135deg, #030812 0%, #071018 45%, #091728 100%);
+            color: var(--text);
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .card {
+            width: 100%;
+            max-width: 560px;
+            background: linear-gradient(145deg, rgba(10, 18, 32, 0.98), rgba(8, 16, 26, 0.94));
+            border: 1px solid rgba(64, 180, 255, 0.24);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 20px 45px rgba(2, 10, 20, 0.45);
+        }
+        
+        h1 {
+            font-size: 1.3rem;
+            margin: 0 0 0.25rem;
+        }
+        
+        .subtitle {
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin: 0.9rem 0 0.3rem;
+        }
+        
+        input,
+        select {
+            width: 100%;
+            background: rgba(7, 17, 29, 0.95);
+            border: 1px solid rgba(64, 180, 255, 0.22);
+            color: #fff;
+            border-radius: 0.6rem;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--info);
+        }
+        
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        
+        .presets {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.9rem;
+            flex-wrap: wrap;
+        }
+        
+        .preset-btn {
+            flex: 1;
+            min-width: 120px;
+            background: var(--surface-2);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text);
+            border-radius: 0.6rem;
+            padding: 0.5rem;
+            font-size: 0.78rem;
+            cursor: pointer;
+        }
+        
+        .preset-btn:hover {
+            border-color: var(--info);
+        }
+        
+        button.submit {
+            width: 100%;
+            margin-top: 1.5rem;
+            background: linear-gradient(135deg, #40b4ff 0%, #1f8fe8 100%);
+            border: none;
+            color: #02111f;
+            font-weight: 600;
+            padding: 0.8rem;
+            border-radius: 0.7rem;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+        
+        button.submit:hover {
+            filter: brightness(1.08);
+        }
+        
+        button.submit:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+        
+        #result {
+            margin-top: 1.25rem;
+            padding: 0.9rem;
+            border-radius: 0.6rem;
+            font-size: 0.82rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+            display: none;
+        }
+        
+        #result.ok {
+            background: rgba(46, 204, 113, 0.12);
+            border: 1px solid var(--green);
+            color: var(--green);
+            display: block;
+        }
+        
+        #result.err {
+            background: rgba(255, 92, 92, 0.12);
+            border: 1px solid var(--red);
+            color: var(--red);
+            display: block;
+        }
+        
+        .hint {
+            font-size: 0.72rem;
+            color: var(--muted);
+            margin-top: 0.4rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>💧 Simulador de Alerta — Cabeça d'Água</h1>
+        <p class="subtitle">Envia uma leitura de sensor pro backend, igual o ESP32 faria. Se o nível estiver ≥ 75%, deve disparar o alerta no Telegram automaticamente.</p>
+
+        <label for="apiBase">Base da API</label>
+        <input id="apiBase" type="text" placeholder="http://localhost/felipe/projetosara/backend/api/index.php">
+        <div class="hint">Ajuste conforme o caminho do seu projeto (a mesma URL usada no app.js).</div>
+
+        <div class="row">
+            <div>
+                <label for="deviceId">Device ID</label>
+                <input id="deviceId" type="text" value="CDA-001">
+            </div>
+            <div>
+                <label for="waterLevel">Nível da água (%)</label>
+                <input id="waterLevel" type="number" value="82" min="0" max="100">
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                <label for="temperature">Temperatura (°C)</label>
+                <input id="temperature" type="number" value="27.5" step="0.1">
+            </div>
+            <div>
+                <label for="battery">Bateria (%)</label>
+                <input id="battery" type="number" value="92" min="0" max="100">
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                <label for="latitude">Latitude</label>
+                <input id="latitude" type="number" value="-23.185" step="0.001">
+            </div>
+            <div>
+                <label for="longitude">Longitude</label>
+                <input id="longitude" type="number" value="-46.876" step="0.001">
+            </div>
+        </div>
+
+        <div class="presets">
+            <button type="button" class="preset-btn" onclick="applyPreset('normal')">🟢 Normal (40%)</button>
+            <button type="button" class="preset-btn" onclick="applyPreset('atencao')">🟡 Atenção (58%)</button>
+            <button type="button" class="preset-btn" onclick="applyPreset('risco')">🔴 Risco (82%)</button>
+        </div>
+
+        <button class="submit" id="sendBtn" onclick="sendAlert()">Enviar leitura simulada</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Tenta adivinhar a base da API a partir de onde este arquivo está sendo aberto.
+        // Funciona automaticamente se este arquivo for salvo dentro de .../frontend/ (ou qualquer subpasta dela).
+        // Se não, o campo fica editável mesmo assim.
+        (function guessApiBase() {
+            const {
+                origin,
+                pathname
+            } = window.location;
+            const marker = '/frontend/';
+            const idx = pathname.indexOf(marker);
+            const field = document.getElementById('apiBase');
+            if (idx !== -1) {
+                field.value = `${origin}${pathname.substring(0, idx)}/backend/api/index.php`;
+            } else {
+                field.value = 'http://localhost/SEU_CAMINHO/backend/api/index.php';
+            }
+        })();
+
+        function applyPreset(tipo) {
+            const presets = {
+                normal: {
+                    water: 40,
+                    temp: 24.5
+                },
+                atencao: {
+                    water: 58,
+                    temp: 27.1
+                },
+                risco: {
+                    water: 82,
+                    temp: 30.2
+                },
+            };
+            const p = presets[tipo];
+            document.getElementById('waterLevel').value = p.water;
+            document.getElementById('temperature').value = p.temp;
+        }
+
+        async function sendAlert() {
+            const btn = document.getElementById('sendBtn');
+            const resultEl = document.getElementById('result');
+            btn.disabled = true;
+            btn.textContent = 'Enviando...';
+            resultEl.className = '';
+            resultEl.style.display = 'none';
+
+            const apiBase = document.getElementById('apiBase').value.trim();
+            const payload = {
+                device_id: document.getElementById('deviceId').value.trim(),
+                water_level: Number(document.getElementById('waterLevel').value),
+                temperature: Number(document.getElementById('temperature').value),
+                latitude: Number(document.getElementById('latitude').value),
+                longitude: Number(document.getElementById('longitude').value),
+                battery: Number(document.getElementById('battery').value),
+            };
+
+            try {
+                const res = await fetch(`${apiBase}?route=device/send-data`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload),
+                });
+                const text = await res.text();
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch {
+                    data = null;
+                }
+
+                if (res.ok && data && data.success) {
+                    resultEl.className = 'ok';
+                    const risco = payload.water_level >= 75;
+                    resultEl.textContent = risco ?
+                        `✅ Enviado com sucesso! Nível ${payload.water_level}% está em risco — confira o Telegram.` :
+                        `✅ Enviado com sucesso. Nível ${payload.water_level}% está normal, não deve disparar alerta.`;
+                } else {
+                    resultEl.className = 'err';
+                    resultEl.textContent = `❌ Erro (status ${res.status}):\n${text}`;
+                }
+            } catch (err) {
+                resultEl.className = 'err';
+                resultEl.textContent = `❌ Falha de conexão: ${err.message}\n\nConfira se o XAMPP está rodando e se a "Base da API" acima está certa.`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Enviar leitura simulada';
+                resultEl.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+
+</html>

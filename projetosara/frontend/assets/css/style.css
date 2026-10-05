@@ -1,0 +1,273 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+:root {
+    --bg: #071018;
+    --surface: #0f1724;
+    --surface-2: #122131;
+    --text: #ffffff;
+    --muted: #c5cdd8;
+    --info: #40b4ff;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: radial-gradient(circle at top left, rgba(64, 180, 255, 0.22), transparent 35%), radial-gradient(circle at bottom right, rgba(12, 145, 255, 0.18), transparent 30%), linear-gradient(135deg, #030812 0%, #071018 45%, #091728 100%);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+.container.py-5 {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    background: linear-gradient(145deg, rgba(10, 18, 32, 0.98), rgba(8, 16, 26, 0.94));
+    border: 1px solid rgba(64, 180, 255, 0.24);
+    box-shadow: 0 20px 45px rgba(2, 10, 20, 0.45);
+    border-radius: 1.1rem;
+    color: var(--text);
+    backdrop-filter: blur(12px);
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.card-header,
+.card-title,
+.form-label,
+.btn,
+.text-muted,
+.text-info,
+small,
+label {
+    color: #ffffff !important;
+}
+
+.form-control-dark {
+    background: rgba(7, 17, 29, 0.95);
+    border: 1px solid rgba(64, 180, 255, 0.22);
+    color: #fff !important;
+    border-radius: 0.8rem;
+    padding: 0.8rem 0.95rem;
+}
+
+.form-control-dark::placeholder {
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.form-control-dark:focus {
+    background: rgba(10, 24, 39, 0.98);
+    border-color: #40b4ff;
+    box-shadow: 0 0 0 .2rem rgba(64, 180, 255, 0.22);
+}
+
+.auth-input {
+    min-height: 3rem;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+}
+
+.input-group .btn {
+    border-radius: 0 0.8rem 0.8rem 0;
+}
+
+.btn {
+    border-radius: 0.8rem;
+    font-weight: 600;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #40b4ff 0%, #1f8fe8 100%);
+    border: none;
+    color: #02111f;
+    box-shadow: 0 8px 20px rgba(64, 180, 255, 0.25);
+}
+
+.btn-info:hover {
+    background: linear-gradient(135deg, #5dc3ff 0%, #2f98eb 100%);
+    color: #02111f;
+}
+
+.google-login-button {
+    min-height: 3.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 0.75rem 1.25rem;
+    background: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.78);
+    border-radius: 0.85rem;
+    color: #202124 !important;
+    font-size: 0.98rem;
+    font-weight: 600;
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.2);
+}
+
+.google-login-button:hover,
+.google-login-button:focus-visible {
+    background: #f7f9fc;
+    border-color: #d2d6dc;
+    color: #202124 !important;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+}
+
+.google-login-button:focus-visible {
+    outline: 3px solid rgba(64, 180, 255, 0.75);
+    outline-offset: 3px;
+}
+
+.google-login-button:active {
+    background: #eef1f5;
+    transform: translateY(0);
+}
+
+.google-login-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex: 0 0 1.25rem;
+}
+
+.google-login-hint {
+    margin: 1rem 0 0;
+    color: var(--muted);
+    font-size: 0.84rem;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.btn-outline-light,
+.btn-outline-secondary,
+.btn-outline-info,
+.btn-outline-warning {
+    border-color: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+}
+
+.btn-outline-light:hover,
+.btn-outline-secondary:hover,
+.btn-outline-info:hover,
+.btn-outline-warning:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+.text-info {
+    text-shadow: 0 0 14px rgba(64, 180, 255, 0.28);
+}
+
+.leaflet-container {
+    background: #0c1728;
+}
+
+.custom-marker .marker-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #0a1222;
+}
+
+#authMessage {
+    min-height: 1.4rem;
+    font-size: 0.95rem;
+}
+
+.auth-card {
+    border-radius: 1.4rem;
+    overflow: hidden;
+}
+
+.auth-hero {
+    background: linear-gradient(135deg, rgba(64, 180, 255, 0.16), rgba(4, 24, 41, 0.95));
+    position: relative;
+}
+
+.auth-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at top right, rgba(255,255,255,0.12), transparent 30%), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.2;
+    mix-blend-mode: screen;
+}
+
+.hero-badge {
+    display: inline-block;
+    width: fit-content;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.2);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-title {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-text {
+    color: rgba(255,255,255,0.86);
+    line-height: 1.6;
+    max-width: 420px;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-top: 1.2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-stats > div {
+    background: rgba(2, 12, 23, 0.45);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 0.9rem;
+    padding: 0.8rem 0.9rem;
+    min-width: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.hero-stats strong {
+    font-size: 1rem;
+}
+
+.hero-stats span {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.82);
+}
+
+@media (max-width: 576px) {
+    .card-body {
+        padding: 1.25rem;
+    }
+}
+
+#alertsList {
+    max-height: 220px;
+    overflow-y: auto;
+}

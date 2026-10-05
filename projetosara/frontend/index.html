@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cabeça d'Água - Painel Administrativo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="assets/css/style.css?v=20261002-1">
+</head>
+
+<body class="bg-dark text-light">
+    <div id="authMessage" class="mb-3 text-muted"></div>
+    <div id="loginScreen" class="container py-5">
+        <div class="row justify-content-center align-items-stretch">
+            <div class="col-lg-10">
+                <div class="card auth-card overflow-hidden">
+                    <div class="row g-0 h-100">
+                        <div class="col-lg-6 auth-hero d-flex flex-column justify-content-center p-4 p-lg-5">
+                            <div class="hero-badge">Monitoramento inteligente</div>
+                            <h2 class="hero-title">Projeto S.A.R.A</h2>
+                            <p class="hero-text">Acompanhe níveis de água, temperatura e alertas em tempo real com uma visão clara do risco de enchente.</p>
+                            <div class="hero-stats">
+                                <div>
+                                    <strong>24/7</strong>
+                                    <span>Monitoramento</span>
+                                </div>
+                                <div>
+                                    <strong>⚠️</strong>
+                                    <span>Alertas ativos</span>
+                                </div>
+                                <div>
+                                    <strong>🌧️</strong>
+                                    <span>Prevenção</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 p-4 p-lg-5">
+                            <div class="card-body p-0">
+                                <h3 class="card-title text-center text-info mb-2">Entrar</h3>
+                                <p class="text-center text-muted mb-4">Acesse o painel administrativo do Projeto S.A.R.A.</p>
+
+                                <button id="googleLoginButton" type="button" class="btn google-login-button w-100" onclick="app.loginWithGoogle(event)">
+                                    <svg class="google-login-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                                        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" transform="translate(0 4)"/>
+                                        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.91c-.58 2.96-2.26 5.47-4.73 7.16l7.64 5.93c4.46-4.12 7.16-10.2 7.16-17.56z"/>
+                                        <path fill="#FBBC05" d="M10.53 28.59a14.4 14.4 0 0 1 0-9.18l-7.98-6.19a23.9 23.9 0 0 0 0 21.56l7.98-6.19z" transform="translate(0 4)"/>
+                                        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.9-5.89l-7.64-5.93c-2.13 1.43-4.86 2.28-8.26 2.28-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                                    </svg>
+                                    <span>Continuar com Google</span>
+                                </button>
+                                <p class="google-login-hint">Acesse com sua conta Google para abrir o painel SARA.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="profileSetupScreen" class="container py-5 d-none">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card bg-black border-secondary shadow-sm">
+                    <div class="card-body p-4">
+                        <h2 class="card-title text-center text-info">Complete seu perfil</h2>
+                        <p class="text-center text-muted">Informe seu telefone para concluir o cadastro e permitir a vinculação com o bot do Telegram.</p>
+                        <form id="profileSetupForm" onsubmit="app.saveProfile(event)">
+                            <div class="mb-3">
+                                <label class="form-label" for="profileName">Nome</label>
+                                <input type="text" id="profileName" class="form-control form-control-dark auth-input" maxlength="120" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="profilePhone">Telefone com código do país</label>
+                                <input type="tel" id="profilePhone" class="form-control form-control-dark auth-input" placeholder="+5511999999999" autocomplete="tel" required>
+                                <div class="form-text text-muted">Use o mesmo número que será enviado ao bot do Telegram.</div>
+                            </div>
+                            <button id="saveProfileButton" type="submit" class="btn btn-info w-100">Salvar perfil</button>
+                            <button type="button" class="btn btn-link text-secondary w-100 mt-2" onclick="app.logout()">Sair</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="recoverScreen" class="container py-5 d-none">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card bg-black border-secondary shadow-sm">
+                    <div class="card-body">
+                        <h2 class="card-title text-center text-info">Recuperar senha</h2>
+                        <p class="text-center text-muted">Escolha a forma de recuperação e insira o código recebido para redefinir a senha.</p>
+
+                        <div class="mb-3">
+                            <button class="btn btn-outline-info w-100 mb-2" onclick="app.recoverByEmail(event)">Recuperar por e-mail</button>
+                            <button class="btn btn-outline-light w-100" onclick="app.recoverByPhone(event)">Recuperar por telefone</button>
+                        </div>
+
+                        <form id="recoverEmailForm" class="d-none" onsubmit="app.recoverByEmailSubmit(event)">
+                            <div class="mb-3">
+                                <label class="form-label">E-mail</label>
+                                <input type="email" id="recoverEmail" class="form-control form-control-dark" placeholder="seu@email.com" required>
+                            </div>
+                            <button type="submit" class="btn btn-outline-info w-100">Enviar código por e-mail</button>
+                        </form>
+
+                        <form id="recoverPhoneForm" class="d-none" onsubmit="app.recoverByPhoneSubmit(event)">
+                            <div class="mb-3">
+                                <label class="form-label">Telefone</label>
+                                <input type="text" id="recoverPhone" class="form-control form-control-dark" placeholder="11999999999" required>
+                            </div>
+                            <button type="submit" class="btn btn-outline-light w-100">Enviar código por telefone</button>
+                        </form>
+
+                        <form id="recoverCodeForm" class="d-none mt-3" onsubmit="app.verifyRecoveryCode(event)">
+                            <div class="mb-3">
+                                <label class="form-label">Código recebido</label>
+                                <input type="text" id="recoverCode" class="form-control form-control-dark" placeholder="123456" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nova senha</label>
+                                <div class="input-group">
+                                    <input type="password" id="recoverNewPassword" class="form-control form-control-dark" placeholder="Nova senha" required>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="app.togglePasswordVisibility('recoverNewPassword', this)" aria-label="Mostrar senha">
+                                        Mostrar
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-outline-warning w-100">Validar código e redefinir senha</button>
+                        </form>
+
+                        <div class="mt-3 text-center text-secondary">
+                            <a href="javascript:void(0)" onclick="return app.showLoginScreen(event)">Voltar para o login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="registerScreen" class="container py-5 d-none">
+        <div class="row justify-content-center align-items-stretch">
+            <div class="col-lg-10">
+                <div class="card auth-card overflow-hidden">
+                    <div class="row g-0 h-100">
+                        <div class="col-lg-6 auth-hero d-flex flex-column justify-content-center p-4 p-lg-5">
+                            <div class="hero-badge">Cadastro</div>
+                            <h2 class="hero-title">Projeto S.A.R.A</h2>
+                            <p class="hero-text">Crie sua conta e acompanhe de forma segura o monitoramento de riscos e alertas do sistema.</p>
+                            <div class="hero-stats">
+                                <div>
+                                    <strong>🛰️</strong>
+                                    <span>Dados em tempo real</span>
+                                </div>
+                                <div>
+                                    <strong>📡</strong>
+                                    <span>Alertas conectados</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 p-4 p-lg-5">
+                            <div class="card-body p-0">
+                                <h3 class="card-title text-center text-info mb-2">Criar conta</h3>
+                                <p class="text-center text-muted mb-4">Cadastre-se para acessar o painel.</p>
+                                <form id="registerForm" onsubmit="app.register(event)">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nome</label>
+                                        <input type="text" id="registerName" class="form-control form-control-dark auth-input" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" id="registerEmail" class="form-control form-control-dark auth-input" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Telefone</label>
+                                        <input type="text" id="registerPhone" class="form-control form-control-dark auth-input" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Senha</label>
+                                        <div class="input-group">
+                                            <input type="password" id="registerPassword" class="form-control form-control-dark auth-input" required>
+                                            <button type="button" class="btn btn-outline-secondary" onclick="app.togglePasswordVisibility('registerPassword', this)" aria-label="Mostrar senha">
+                                                Mostrar
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-outline-light w-100">Cadastrar</button>
+                                </form>
+                                <div class="mt-3 text-center text-secondary">
+                                    Já possui conta? <a href="javascript:void(0)" onclick="return app.showLoginScreen(event)">Entrar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboardScreen" class="d-none container-fluid py-3">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <div>
+                <h1 class="h3 text-info">Área de monitoramento</h1>
+                <p class="text-muted mb-0">Monitoramento do dispositivo CDA-001.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <div id="userBadge" class="text-muted"></div>
+                <button class="btn btn-outline-light" onclick="app.logout()">Sair</button>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3" id="summaryCards"></div>
+
+        <div class="row g-3">
+            <div class="col-xl-8">
+                <div class="card bg-black border-secondary">
+                    <div class="card-header text-info">Mapa dos Dispositivos</div>
+                    <div class="card-body p-0">
+                        <div id="map" style="height: 520px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="card bg-black border-secondary mb-3">
+                    <div class="card-header text-info">Últimos Alertas</div>
+                    <div class="card-body" id="alertsList"></div>
+                </div>
+                <div class="card bg-black border-secondary">
+                    <div class="card-header text-info">Histórico do nível de água</div>
+                    <div class="card-body">
+                        <canvas id="waterLevelChart" height="260"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row g-3 mt-3">
+            <div class="col-12">
+                <div class="card bg-black border-secondary">
+                    <div class="card-header text-info">Detalhes do Sensor</div>
+                    <div class="card-body">
+                        <div id="deviceDetailInfo" class="text-muted">Aguardando a primeira leitura do CDA-001.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="superadminPanel" class="row g-3 mt-3 d-none">
+            <div class="col-12">
+                <div class="card bg-black border-secondary">
+                    <div class="card-header text-info">Gerenciamento do Superadmin</div>
+                    <div class="card-body">
+                        <p class="text-muted">Gerencie permissões e dados de perfil dos usuários, além do nome e da localização do dispositivo real. A identificação CDA-001 permanece fixa para não interromper o ESP32.</p>
+                        <div class="card bg-dark border-secondary mb-3">
+                            <div class="card-header text-info">Usuários cadastrados</div>
+                            <div class="card-body"><div id="usersList" class="row g-2"></div></div>
+                        </div>
+                        <div class="card bg-dark border-secondary">
+                            <div class="card-header text-info">Dispositivo real</div>
+                            <div class="card-body"><div id="adminDevicesList" class="row g-2"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase-client.js?v=20260928-1"></script>
+    <script src="assets/js/app.js?v=20261002-2" defer></script>
+</body>
+
+</html>
